@@ -1,8 +1,19 @@
+﻿from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import status
+from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.views import exception_handler
 
 
 def custom_exception_handler(exc, context):
+    if isinstance(exc, DjangoValidationError):
+        if hasattr(exc, "message_dict"):
+            detail = exc.message_dict
+        elif hasattr(exc, "messages"):
+            detail = exc.messages
+        else:
+            detail = str(exc)
+        exc = DRFValidationError(detail)
+
     response = exception_handler(exc, context)
 
     if response is None:
@@ -23,8 +34,8 @@ def custom_exception_handler(exc, context):
         message = "Recurso no encontrado."
 
     response.data = {
-        "ok": False,
-        "error": message,
-        "details": details,
+        "status": "error",
+        "data": details,
+        "message": message,
     }
     return response
