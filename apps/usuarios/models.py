@@ -1,4 +1,4 @@
-﻿import uuid
+import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
@@ -16,6 +16,7 @@ class Usuario(AbstractUser):
     class Rol(models.TextChoices):
         ADMIN = "ADMIN", "Admin"
         REPARTIDOR = "REPARTIDOR", "Repartidor"
+        CLIENTE = "CLIENTE", "Cliente"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None

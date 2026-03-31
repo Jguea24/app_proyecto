@@ -1,4 +1,4 @@
-﻿from rest_framework.permissions import SAFE_METHODS, BasePermission
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class IsAdminOrReadOnlySameEmpresa(BasePermission):
@@ -15,4 +15,4 @@ class IsAdminOrReadOnlySameEmpresa(BasePermission):
         if request.method in SAFE_METHODS:
             return same_empresa
 
-        return same_empresa and (user.is_superuser or user.rol == "ADMIN")
+        return same_empresa and (user.is_superuser or user.rol in {"ADMIN", "CLIENTE"})

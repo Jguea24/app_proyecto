@@ -38,6 +38,12 @@ class PedidoViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(empresa=self.request.user.empresa)
 
+    def destroy(self, request, *args, **kwargs):
+        pedido = self.get_object()
+        if pedido.estado != Pedido.Estado.PENDIENTE:
+            raise ValidationError({"estado": "Solo se pueden eliminar pedidos en estado PENDIENTE."})
+        return super().destroy(request, *args, **kwargs)
+
     @action(detail=False, methods=["post"], url_path="quote")
     def quote(self, request):
         """Cotiza distancia/tiempo entre origen y destino."""

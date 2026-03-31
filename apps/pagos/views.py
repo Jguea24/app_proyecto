@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
-from apps.usuarios.permissions import IsAdmin
+from apps.usuarios.permissions import IsAdmin, IsAdminOrCliente
 
 from .models import Payment
 from .serializers import BankTransferSerializer, CashPaymentSerializer, PaymentSerializer
@@ -16,7 +16,7 @@ class PaymentViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Payment.objects.select_related("order")
     serializer_class = PaymentSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAdminOrCliente]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -50,7 +50,7 @@ class BankTransferCreateAPIView(CreateAPIView):
     """Registrar pago por transferencia bancaria."""
 
     serializer_class = BankTransferSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAdminOrCliente]
     parser_classes = (MultiPartParser, FormParser, JSONParser)
 
     def create(self, request, *args, **kwargs):
@@ -64,7 +64,7 @@ class CashPaymentCreateAPIView(CreateAPIView):
     """Registrar pago en efectivo."""
 
     serializer_class = CashPaymentSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAdminOrCliente]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

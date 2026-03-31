@@ -10,6 +10,8 @@ from .models import Payment
 class PaymentSerializer(serializers.ModelSerializer):
     """Serializer general de pagos."""
 
+    cliente_nombre = serializers.CharField(source="order.cliente_nombre", read_only=True)
+
     class Meta:
         model = Payment
         fields = "__all__"

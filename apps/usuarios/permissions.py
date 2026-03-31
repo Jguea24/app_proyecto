@@ -1,4 +1,4 @@
-﻿from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission
 
 
 class IsAdmin(BasePermission):
@@ -11,6 +11,16 @@ class IsRepartidor(BasePermission):
     def has_permission(self, request, view):
         user = request.user
         return bool(user and user.is_authenticated and user.rol == "REPARTIDOR")
+
+
+class IsAdminOrCliente(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        return bool(
+            user
+            and user.is_authenticated
+            and (user.is_superuser or user.rol in {"ADMIN", "CLIENTE"})
+        )
 
 
 class IsSameEmpresa(BasePermission):
